@@ -14,23 +14,12 @@
       <h2>请登录</h2>
       <div class="form-group">
         <label for="device">设备标识</label>
-        <input
-            id="device"
-            v-model="deviceInfo"
-            type="text"
-            placeholder="设备标识将自动检测"
-            readonly
-        />
+        <input id="device" v-model="deviceInfo" type="text" placeholder="设备标识将自动检测" readonly />
         <small class="form-hint">设备类型已自动识别</small>
       </div>
       <div class="form-group">
         <label for="password">密码</label>
-        <input
-            id="password"
-            v-model="password"
-            type="password"
-            placeholder="请输入密码"
-        />
+        <input id="password" v-model="password" type="password" placeholder="请输入密码" />
       </div>
       <button class="primary-button" @click="authenticate" :disabled="isAuthenticating">
         <span class="button-icon">🔐</span>
@@ -44,37 +33,21 @@
       <div class="clipboard-input">
         <h2>添加到剪贴板</h2>
         <div class="tabs">
-          <button
-              class="tab-button"
-              :class="{ active: activeTab === 'text' }"
-              @click="activeTab = 'text'"
-          >
+          <button class="tab-button" :class="{ active: activeTab === 'text' }" @click="activeTab = 'text'">
             <span class="tab-icon">📝</span> 文本
           </button>
-          <button
-              class="tab-button"
-              :class="{ active: activeTab === 'image' }"
-              @click="activeTab = 'image'"
-          >
+          <button class="tab-button" :class="{ active: activeTab === 'image' }" @click="activeTab = 'image'">
             <span class="tab-icon">🖼️</span> 图片
           </button>
         </div>
 
         <div v-if="activeTab === 'text'" class="tab-content">
-          <textarea
-              v-model="newClipboardContent"
-              placeholder="粘贴文本内容到这里"
-              @focus="tryReadClipboard"
-          ></textarea>
+          <textarea v-model="newClipboardContent" placeholder="粘贴文本内容到这里" @focus="tryReadClipboard"></textarea>
           <div class="action-buttons">
             <button class="secondary-button" @click="newClipboardContent = ''">
               清空
             </button>
-            <button
-                class="primary-button"
-                @click="addToClipboard"
-                :disabled="!newClipboardContent"
-            >
+            <button class="primary-button" @click="addToClipboard" :disabled="!newClipboardContent">
               <span class="button-icon">➕</span> 添加到共享剪贴板
             </button>
           </div>
@@ -82,21 +55,12 @@
 
         <div v-else-if="activeTab === 'image'" class="tab-content">
           <div class="image-preview-area">
-            <div
-                v-if="selectedImage"
-                class="image-preview"
-            >
-              <img :src="imagePreviewUrl" alt="Image preview"/>
+            <div v-if="selectedImage" class="image-preview">
+              <img :src="imagePreviewUrl" alt="Image preview" />
               <button class="remove-image" @click="clearImageSelection">✖</button>
             </div>
             <div v-else class="image-dropzone" @drop.prevent="handleImageDrop" @dragover.prevent>
-              <input
-                  id="image-input"
-                  type="file"
-                  accept="image/*"
-                  @change="handleImageSelect"
-                  class="hidden-input"
-              />
+              <input id="image-input" type="file" accept="image/*" @change="handleImageSelect" class="hidden-input" />
               <label for="image-input" class="dropzone-label">
                 <span class="upload-icon">📷</span>
                 <span>拖放图片到这里或点击选择</span>
@@ -107,11 +71,7 @@
             <button class="secondary-button" @click="clearImageSelection" v-if="selectedImage">
               清除
             </button>
-            <button
-                class="primary-button"
-                @click="addToClipboard"
-                :disabled="!selectedImage"
-            >
+            <button class="primary-button" @click="addToClipboard" :disabled="!selectedImage">
               <span class="button-icon">➕</span> 添加到共享剪贴板
             </button>
           </div>
@@ -143,12 +103,8 @@
         </div>
 
         <div v-else class="clipboard-list" :key="newestItemId?.toString() || 'defaultKey'">
-        <div
-              v-for="(item, index) in clipboardItems"
-              :key="item.id"
-              class="clipboard-item"
-              :class="{ 'highlighter': index < 1 }"
-          >
+          <div v-for="(item, index) in clipboardItems" :key="item.id" class="clipboard-item"
+            :class="{ 'highlighter': index < 1 }">
             <div class="item-header">
               <div class="device-info">
                 <span class="device-icon" :class="getDeviceIconClass(item.deviceInfo)"></span>
@@ -168,7 +124,7 @@
               <!-- 图片内容 -->
               <div v-else-if="item.type === 'image'" class="image-content">
                 <img :src="`data:image/png;base64,${item.imageData}`" alt="Clipboard image"
-                     @click="previewImage(item)"/>
+                  @click="previewImage(item)" />
               </div>
             </div>
 
@@ -183,14 +139,9 @@
 
               <!-- 拆词结果 -->
               <div v-if="wordSplitResults[index] && wordSplitResults[index].length > 0" class="split-words">
-                <div
-                    v-for="(word, wordIndex) in wordSplitResults[index]"
-                    :key="wordIndex"
-                    class="word-chip"
-                    :class="{ selected: selectedWords[index]?.some(selected => selected.wordIndex === wordIndex) }"
-                    @click="toggleWordSelection(word, index, wordIndex)"
-                    :title="`点击选择: ${word}`"
-                >
+                <div v-for="(word, wordIndex) in wordSplitResults[index]" :key="wordIndex" class="word-chip"
+                  :class="{ selected: selectedWords[index]?.some(selected => selected.wordIndex === wordIndex) }"
+                  @click="toggleWordSelection(word, index, wordIndex)" :title="`点击选择: ${word}`">
                   {{ word }}
                 </div>
                 <button class="action-button" @click="copyMergedWords(index)" title="复制合并的分词">
@@ -223,7 +174,7 @@
     <div v-if="imagePreviewModal" class="modal-overlay" @click="imagePreviewModal = false">
       <div class="modal-content" @click.stop>
         <button class="modal-close" @click="imagePreviewModal = false">✖</button>
-        <img :src="`data:image/png;base64,${currentPreviewImage}`" alt="Preview" class="preview-image"/>
+        <img :src="`data:image/png;base64,${currentPreviewImage}`" alt="Preview" class="preview-image" />
         <div class="modal-actions">
           <button class="action-button" @click="downloadImage(currentPreviewImage)">
             <span class="action-icon">💾</span> 下载图片
@@ -235,7 +186,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref, onMounted, computed, watch, onUnmounted, type UnwrapRef} from 'vue';
+import { defineComponent, ref, onMounted, computed, watch, onUnmounted, type UnwrapRef } from 'vue';
 import axios from 'axios';
 
 const API_URL = `${import.meta.env.VITE_API_URL}${import.meta.env.VITE_APP_API_PORT ? `:${import.meta.env.VITE_APP_API_PORT}` : ''}`;
@@ -415,17 +366,17 @@ export default defineComponent({
 
     // 启动轮询
     const startPolling = () => {
-            if (autoRefresh.value && pollingInterval.value === null) {
-              pollingInterval.value = window.setInterval(async () => {
-                if (isAuthenticated.value) {
-                  await fetchLastSharedContent(); // 定期更新共享剪贴板的最新记录
-                  await checkClipboard();
-                }
-              }, 3000);
+      if (autoRefresh.value && pollingInterval.value === null) {
+        pollingInterval.value = window.setInterval(async () => {
+          if (isAuthenticated.value) {
+            await fetchLastSharedContent(); // 定期更新共享剪贴板的最新记录
+            await checkClipboard();
+          }
+        }, 3000);
 
-            }
-        }
-    ;
+      }
+    }
+      ;
 
     // 停止轮询
     const stopPolling = () => {
@@ -650,41 +601,41 @@ export default defineComponent({
 
     // 检查剪贴板内容
     const checkClipboard = async () => {
-      if (!navigator.clipboard || !navigator.clipboard.read) {
-        console.warn('Clipboard API not supported');
+      if (!navigator.clipboard || !navigator.clipboard.readText) {
         return;
       }
 
       try {
-        const clipboardItems = await navigator.clipboard.read();
-        for (const item of clipboardItems) {
-          if (item.types.includes('text/plain')) {
-            const text = await item.getType('text/plain').then((blob) => blob.text());
-            if (text !== lastSharedContent.value?.content && text !== lastSyncedContent.value?.content) {
-              lastSyncedContent.value.content = text;
-              lastSyncedContent.value.type = 'text';
-              await syncClipboardContent(lastSyncedContent.value);
-              await fetchLastSharedContent();
-            }
-          } else if (item.types.includes('image/png')) {
-            const imageBlob = await item.getType('image/png');
-            const reader = new FileReader();
-            reader.onload = async () => {
-              const base64Image = reader.result as string;
-              const cleanedBase64Image = base64Image.replace(/^data:image\/png;base64,/, '');
-              if (lastSharedContent.value && (cleanedBase64Image !== lastSharedContent.value.imageData) && lastSyncedContent.value && (cleanedBase64Image !== lastSyncedContent.value.imageData)) {
-                lastSyncedContent.value.content = `${Math.floor(Math.random() * 1e7)}.png`;
-                lastSyncedContent.value.imageData = cleanedBase64Image;
-                lastSyncedContent.value.type = 'image';
-                await syncClipboardContent(lastSyncedContent.value);
-                await fetchLastSharedContent();
-              }
-            };
-            reader.readAsDataURL(imageBlob);
-          }
+        // 检查文档是否有焦点
+        if (!document.hasFocus()) {
+          return; // 如果文档没有焦点，直接返回不尝试读取剪贴板
+        }
+        
+        const text = await navigator.clipboard.readText();
+        
+        // 只有当剪贴板内容与上次同步的内容不同，且不为空时才同步
+        if (text && text.trim() !== '' && text !== lastSyncedContent.value.content) {
+          // 更新最后同步的内容
+          lastSyncedContent.value.content = text;
+          lastSyncedContent.value.type = 'text';
+          
+          // 自动同步到服务器
+          await axios.post(`${API_URL}/api/clipboard`, {
+            content: text,
+            deviceInfo: deviceInfo.value,
+            type: 'text'
+          }, {
+            headers: {
+              Authorization: `Bearer ${token.value}`,
+            },
+          });
+          
+          // 刷新剪贴板列表
+          await fetchClipboardItems();
         }
       } catch (error) {
         console.error('Error reading clipboard:', error);
+        // 不需要在控制台之外显示错误，因为这是一个后台操作
       }
     };
 
@@ -714,7 +665,7 @@ export default defineComponent({
             oldestItemId.value = sortedItems[sortedItems.length - 1].id;
           }
         }
-        else{
+        else {
           const sortedItems = [...clipboardItems.value].sort((a, b) => b.id - a.id);
           newestItemId.value = sortedItems[0].id;
           lastSharedContent.value = sortedItems[0];
@@ -788,38 +739,38 @@ export default defineComponent({
     // 复制到剪贴板
     const copyToClipboard = (text: string) => {
       navigator.clipboard.writeText(text)
-          .then(() => {
-            // 使用临时元素显示复制成功提示
-            const notification = document.createElement('div');
-            notification.classList.add('copy-notification');
-            notification.innerText = '已复制到剪贴板';
-            document.body.appendChild(notification);
+        .then(() => {
+          // 使用临时元素显示复制成功提示
+          const notification = document.createElement('div');
+          notification.classList.add('copy-notification');
+          notification.innerText = '已复制到剪贴板';
+          document.body.appendChild(notification);
 
-            // 2秒后移除提示
-            setTimeout(() => {
-              document.body.removeChild(notification);
-            }, 2000);
-          })
-          .catch(err => {
-            console.error('无法复制到剪贴板:', err);
-          });
+          // 2秒后移除提示
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('无法复制到剪贴板:', err);
+        });
     };
 
     // 拆词 - 改进版，使用更智能的中文分词
     // 修改前端的splitAndShowWords函数
     const splitAndShowWords = async (text: string, index: number) => {
       try {
-        if(wordSplitResults.value[index].length > 0){
+        if (wordSplitResults.value[index].length > 0) {
           wordSplitResults.value[index] = [];
           return;
         }
         const response = await axios.post(`${API_URL}/api/split-words`,
-            {text},
-            {
-              headers: {
-                'Authorization': `Bearer ${token.value}`
-              }
+          { text },
+          {
+            headers: {
+              'Authorization': `Bearer ${token.value}`
             }
+          }
         );
 
         if (response.data && response.data.words) {
@@ -848,7 +799,7 @@ export default defineComponent({
       }
 
       const existingIndex = selectedWords.value[index].findIndex(
-          (selected) => selected.wordIndex === wordIndex
+        (selected) => selected.wordIndex === wordIndex
       );
 
       if (existingIndex !== -1) {
@@ -856,7 +807,7 @@ export default defineComponent({
         selectedWords.value[index].splice(existingIndex, 1);
       } else {
         // Add the word and sort by wordIndex
-        selectedWords.value[index].push({word, wordIndex});
+        selectedWords.value[index].push({ word, wordIndex });
         selectedWords.value[index].sort((a, b) => a.wordIndex - b.wordIndex);
       }
     };
@@ -1053,7 +1004,7 @@ h2 {
   background-position: center;
 }
 
-.device-badge .device-icon{
+.device-badge .device-icon {
   display: inline-block;
   width: 20px;
   height: 20px;
@@ -1397,15 +1348,15 @@ textarea:focus {
   transition: .4s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: var(--primary-color);
 }
 
-input:focus + .slider {
+input:focus+.slider {
   box-shadow: 0 0 1px var(--primary-color);
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   transform: translateX(20px);
 }
 
@@ -1728,14 +1679,17 @@ input:checked + .slider:before {
     opacity: 0;
     transform: translate(-50%, 20px);
   }
+
   20% {
     opacity: 1;
     transform: translate(-50%, 0);
   }
+
   80% {
     opacity: 1;
     transform: translate(-50%, 0);
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -20px);
@@ -1760,7 +1714,7 @@ input:checked + .slider:before {
     width: 100%;
   }
 
-  .action-button{
+  .action-button {
     padding: 4px 12px;
     border-radius: 15px;
     font-size: 13px;
@@ -1778,7 +1732,7 @@ input:checked + .slider:before {
     font-size: 18px;
   }
 
-  .container{
+  .container {
     padding: 0;
   }
 
@@ -1797,7 +1751,7 @@ input:checked + .slider:before {
     color: var(--primary-dark);
   }
 
-  .device-badge .device-icon{
+  .device-badge .device-icon {
     width: 15px;
     height: 15px;
   }
@@ -1821,23 +1775,23 @@ input:checked + .slider:before {
     background-color: var(--highlight-color);
   }
 
-  .action-button{
+  .action-button {
     padding: 3px 10px;
     border-radius: 15px;
     font-size: 11px;
   }
 
-  .split-words{
-    gap:5px;
+  .split-words {
+    gap: 5px;
     margin-top: 0;
   }
 
-  .word-chip{
+  .word-chip {
     border-radius: 20px;
     padding: 2px 10px;
     font-size: 12px;
   }
 
 
-  }
+}
 </style>

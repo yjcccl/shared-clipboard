@@ -60,7 +60,7 @@ public class ClipboardController {
     }
 
     @GetMapping("/latest")
-    public ResponseEntity<?> getLatestClipboardItems(@RequestParam String newId) {
+    public ResponseEntity<?> getLatestClipboardItems(@RequestParam("new") String newId) {
         try {
             Long id = Long.parseLong(newId);
             List<ClipboardItem> items = clipboardRepository.findByIdGreaterThan(
@@ -68,7 +68,7 @@ public class ClipboardController {
             );
             return ResponseEntity.ok(items);
         } catch (NumberFormatException e) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Invalid new parameter"));
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid newId parameter"));
         }
     }
 
